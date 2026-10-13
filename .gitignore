@@ -218,3 +218,20 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+# Virtual environment
+venv/
+
+# Environment variables
+.env
+core/.env
+
+# Django
+core/db.sqlite3
+core/staticfiles/
+core/media/
+
+# Python
+__pycache__/
+*.py[cod]

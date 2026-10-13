@@ -1,0 +1,113 @@
+{% load static %}
+<!doctype html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block title %}HM Bathroom{% endblock %}</title>
+
+    <meta name="description"
+          content="{% block meta_description %}Toilets, basins, mirrors and bathroom fittings from HM Bathroom.{% endblock %}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&family=Playfair+Display:wght@900&display=swap"
+    >
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+<header class="header">
+    <div class="wrap header-inner">
+
+        <a class="logo" href="{% url 'home' %}" aria-label="HM Bathroom, home">
+            <span class="logo-main">HM BATHROOM</span>
+            <span class="logo-tag">TOILETS • BASINS • MIRRORS</span>
+        </a>
+
+        <nav class="nav" aria-label="Main">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="#">Products</a>
+        </nav>
+
+        <div class="header-actions">
+            <a
+                class="btn btn-small btn-rust"
+                href="https://wa.me/447719191818?text=Hi%20HM%20Bathroom%2C%20I%20have%20a%20question%20about%20your%20products."
+                target="_blank"
+                rel="noopener"
+            >
+                <span>WhatsApp</span>
+            </a>
+
+            <a
+                class="btn btn-small btn-ghost"
+                href="tel:07401252502"
+                aria-label="Call 07401 252 502"
+            >
+                <span class="hide-sm">07401 252 502</span>
+            </a>
+        </div>
+
+    </div>
+</header>
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+    <div class="wrap footer-grid">
+
+        <div>
+            <div class="logo-main logo-light">HM BATHROOM</div>
+            <p>Toilets, basins, mirrors and fittings. Message us for prices and availability.</p>
+        </div>
+
+        <div>
+            <h3>Products</h3>
+            <ul>
+                <li><a href="##one-piece-toilets">One-Piece Toilets</a></li>
+                <li><a href="##wall-hung-toilets">Wall-Hung Toilets</a></li>
+                <li><a href="##smart-toilets">Smart Toilets</a></li>
+                <li><a href="##concealed-cisterns">Concealed Cisterns</a></li>
+                <li><a href="##wall-hung-basins">Wall-Hung Basins</a></li>
+                <li><a href="##pedestal-basins">Pedestal Basins</a></li>
+                <li><a href="##mirrors">Mirrors</a></li>
+                <li><a href="##accessories">Accessories</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>Contact</h3>
+            <ul>
+                <li><a href="tel:07401252502">07401 252 502</a></li>
+                <li>
+                    <a href="https://wa.me/447719191818?text=Hi%20HM%20Bathroom"
+                       target="_blank" rel="noopener">
+                        WhatsApp 07719 191 818
+                    </a>
+                </li>
+                <li><a href="mailto:hmbathroom@hotmail.com">hmbathroom@hotmail.com</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="wrap footer-bottom">
+        <span>© 2026 HM Bathroom</span>
+    </div>
+</footer>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>
