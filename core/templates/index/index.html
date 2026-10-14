@@ -26,7 +26,7 @@ Toilets, basins, mirrors and fittings. Browse the range and message us for a pri
 
             <div class="actions">
 
-                <a class="btn btn-sun" href="#">
+                <a class="btn btn-sun" href="{% url 'shop:product_list' %}">
                     Browse products
                 </a>
 
@@ -68,107 +68,68 @@ Toilets, basins, mirrors and fittings. Browse the range and message us for a pri
     <div class="section-head">
         <h2>Shop by category</h2>
 
-        <a class="link" href="#">
+        <a class="link" href="{% url 'shop:product_list' %}">
             All products
         </a>
     </div>
 
     <div class="cat-grid">
 
-        <a class="cat-tile" href="##one-piece-toilets">
-            <div class="media">
-                <img src="{% static 'images/cat-one-piece-toilets.webp' %}" alt="One-Piece Toilets" loading="lazy">
-            </div>
+        {% for category in categories %}
 
-            <div class="bar">
-                <span>One-Piece Toilets</span>
-                <span class="count">8</span>
-            </div>
-        </a>
+            <a
+                class="cat-tile"
+                href="{% url 'shop:product_list' %}#{{ category.slug }}"
+            >
+                <div class="media">
 
+                    {% if category.latest_product %}
 
-        <a class="cat-tile" href="##wall-hung-toilets">
-            <div class="media">
-                <img src="{% static 'images/cat-wall-hung-toilets.webp' %}" alt="Wall-Hung Toilets" loading="lazy">
-            </div>
+                        {% with image=category.latest_product.images.all|first %}
 
-            <div class="bar">
-                <span>Wall-Hung Toilets</span>
-                <span class="count">2</span>
-            </div>
-        </a>
+                            {% if image %}
 
+                                <img
+                                    src="{{ image.image.url }}"
+                                    alt="{{ image.alt_text|default:category.latest_product.name }}"
+                                    loading="lazy"
+                                >
 
-        <a class="cat-tile" href="##smart-toilets">
-            <div class="media">
-                <img src="{% static 'images/cat-smart-toilets.webp' %}" alt="Smart Toilets" loading="lazy">
-            </div>
+                            {% else %}
 
-            <div class="bar">
-                <span>Smart Toilets</span>
-                <span class="count">1</span>
-            </div>
-        </a>
+                                <img
+                                    src="{% static 'images/placeholder.webp' %}"
+                                    alt="{{ category.name }}"
+                                    loading="lazy"
+                                >
 
+                            {% endif %}
 
-        <a class="cat-tile" href="##concealed-cisterns">
-            <div class="media">
-                <img src="{% static 'images/cat-concealed-cisterns.webp' %}" alt="Concealed Cisterns" loading="lazy">
-            </div>
+                        {% endwith %}
 
-            <div class="bar">
-                <span>Concealed Cisterns</span>
-                <span class="count">1</span>
-            </div>
-        </a>
+                    {% else %}
 
+                        <img
+                            src="{% static 'images/placeholder.webp' %}"
+                            alt="{{ category.name }}"
+                            loading="lazy"
+                        >
 
-        <a class="cat-tile" href="##wall-hung-basins">
-            <div class="media">
-                <img src="{% static 'images/cat-wall-hung-basins.webp' %}" alt="Wall-Hung Basins" loading="lazy">
-            </div>
+                    {% endif %}
 
-            <div class="bar">
-                <span>Wall-Hung Basins</span>
-                <span class="count">3</span>
-            </div>
-        </a>
+                </div>
 
+                <div class="bar">
+                    <span>{{ category.name }}</span>
+                    <span class="count">{{ category.active_products|length }}</span>
+                </div>
+            </a>
 
-        <a class="cat-tile" href="##pedestal-basins">
-            <div class="media">
-                <img src="{% static 'images/cat-pedestal-basins.webp' %}" alt="Pedestal Basins" loading="lazy">
-            </div>
+        {% empty %}
 
-            <div class="bar">
-                <span>Pedestal Basins</span>
-                <span class="count">2</span>
-            </div>
-        </a>
+            <p>No categories available.</p>
 
-
-        <a class="cat-tile" href="##mirrors">
-            <div class="media">
-                <img src="{% static 'images/cat-mirrors.webp' %}" alt="Mirrors" loading="lazy">
-            </div>
-
-            <div class="bar">
-                <span>Mirrors</span>
-                <span class="count">5</span>
-            </div>
-        </a>
-
-
-        <a class="cat-tile" href="##accessories">
-            <div class="media">
-                <img src="{% static 'images/cat-accessories.webp' %}" alt="Accessories" loading="lazy">
-            </div>
-
-            <div class="bar">
-                <span>Accessories</span>
-                <span class="count">1</span>
-            </div>
-        </a>
+        {% endfor %}
 
     </div>
 </section>
@@ -179,179 +140,145 @@ Toilets, basins, mirrors and fittings. Browse the range and message us for a pri
     <div class="section-head">
         <h2>Popular products</h2>
 
-        <a class="link" href="#">
+        <a class="link" href="{% url 'shop:product_list' %}">
             View all
         </a>
     </div>
 
     <div class="grid">
 
-        <a class="card" href="#">
-            <div class="media">
-                <img src="{% static 'images/sh-8604-1.webp' %}" alt="SH-8604 One-Piece Toilet" loading="lazy">
-            </div>
+        {% for product in popular_products %}
 
-            <div class="card-body">
-                <span class="card-cat">One-Piece Toilets</span>
+            <a
+                class="card"
+                href="{% url 'shop:product_detail' slug=product.slug %}"
+            >
+                <div class="media">
 
-                <h3>SH-8604 One-Piece Toilet</h3>
+                    {% with image=product.images.all|first %}
 
-                <p class="card-sum">
-                    S-trap one-piece toilet with bidet function and cold accessories.
-                </p>
+                        {% if image %}
 
-                <span class="price">
-                    <span class="price-empty">Price on request</span>
-                </span>
-            </div>
-        </a>
+                            <img
+                                src="{{ image.image.url }}"
+                                alt="{{ image.alt_text|default:product.name }}"
+                                loading="lazy"
+                            >
 
+                        {% else %}
 
-        <a class="card" href="#">
-            <div class="media">
-                <img src="{% static 'images/sh-6201-1.webp' %}" alt="SH-6201 One-Piece Toilet" loading="lazy">
-            </div>
+                            {% if product.slug == "sh-8604" %}
 
-            <div class="card-body">
-                <span class="card-cat">One-Piece Toilets</span>
+                                <img
+                                    src="{% static 'images/sh-8604-1.webp' %}"
+                                    alt="{{ product.name }}"
+                                    loading="lazy"
+                                >
 
-                <h3>SH-6201 One-Piece Toilet</h3>
+                            {% elif product.slug == "sh-6201" %}
 
-                <p class="card-sum">
-                    Tornado flush, S-trap, with bidet function and cold accessories.
-                </p>
+                                <img
+                                    src="{% static 'images/sh-6201-1.webp' %}"
+                                    alt="{{ product.name }}"
+                                    loading="lazy"
+                                >
 
-                <span class="price">
-                    <span class="price-empty">Price on request</span>
-                </span>
-            </div>
-        </a>
+                            {% elif product.slug == "sh-009" %}
 
+                                <img
+                                    src="{% static 'images/sh-009-1.webp' %}"
+                                    alt="{{ product.name }}"
+                                    loading="lazy"
+                                >
 
-        <a class="card" href="#">
-            <div class="media">
-                <img src="{% static 'images/sh-009-1.webp' %}" alt="SH-009 Wall-Hung Toilet" loading="lazy">
-            </div>
+                            {% elif product.slug == "sh-927d" %}
 
-            <div class="card-body">
-                <span class="card-cat">Wall-Hung Toilets</span>
+                                <img
+                                    src="{% static 'images/sh-927d-1.webp' %}"
+                                    alt="{{ product.name }}"
+                                    loading="lazy"
+                                >
 
-                <h3>SH-009 Wall-Hung Toilet</h3>
+                            {% elif product.slug == "sh-h01" %}
 
-                <p class="card-sum">
-                    Rimless wall-hung toilet, with or without bidet function.
-                </p>
+                                <img
+                                    src="{% static 'images/sh-h01-1.webp' %}"
+                                    alt="{{ product.name }}"
+                                    loading="lazy"
+                                >
 
-                <span class="price">
-                    <span class="price-empty">Price on request</span>
-                </span>
-            </div>
-        </a>
+                            {% elif product.slug == "sh-p131" %}
 
+                                <img
+                                    src="{% static 'images/sh-p131-1.webp' %}"
+                                    alt="{{ product.name }}"
+                                    loading="lazy"
+                                >
 
-        <a class="card" href="#">
-            <div class="media">
-                <img src="{% static 'images/sh-927d-1.webp' %}" alt="SH-927D Smart Toilet" loading="lazy">
-            </div>
+                            {% elif product.slug == "sh-8802bl" %}
 
-            <div class="card-body">
-                <span class="card-cat">Smart Toilets</span>
+                                <img
+                                    src="{% static 'images/sh-8802bl-1.webp' %}"
+                                    alt="{{ product.name }}"
+                                    loading="lazy"
+                                >
 
-                <h3>SH-927D Smart Toilet</h3>
+                            {% elif product.slug == "sh-1176" %}
 
-                <p class="card-sum">
-                    Auto open and close, remote controller, bidet and drying.
-                </p>
+                                <img
+                                    src="{% static 'images/sh-1176-1.webp' %}"
+                                    alt="{{ product.name }}"
+                                    loading="lazy"
+                                >
 
-                <span class="price">
-                    <span class="price-empty">Price on request</span>
-                </span>
-            </div>
-        </a>
+                            {% else %}
 
+                                <img
+                                    src="{% static 'images/placeholder.webp' %}"
+                                    alt="{{ product.name }}"
+                                    loading="lazy"
+                                >
 
-        <a class="card" href="#">
-            <div class="media">
-                <img src="{% static 'images/sh-h01-1.webp' %}" alt="SH-H01 Concealed Cistern and Frame" loading="lazy">
-            </div>
+                            {% endif %}
 
-            <div class="card-body">
-                <span class="card-cat">Concealed Cisterns</span>
+                        {% endif %}
 
-                <h3>SH-H01 Concealed Cistern and Frame</h3>
+                    {% endwith %}
 
-                <p class="card-sum">
-                    Concealed cistern and frame with a round button.
-                </p>
+                </div>
 
-                <span class="price">
-                    <span class="price-empty">Price on request</span>
-                </span>
-            </div>
-        </a>
+                <div class="card-body">
 
+                    <span class="card-cat">{{ product.category.name }}</span>
 
-        <a class="card" href="#">
-            <div class="media">
-                <img src="{% static 'images/sh-p131-1.webp' %}" alt="SH-P131 Wall-Mounted Basin" loading="lazy">
-            </div>
+                    <h3>{{ product.name }}</h3>
 
-            <div class="card-body">
-                <span class="card-cat">Wall-Hung Basins</span>
+                    <p class="card-sum">
+                        {{ product.short_description|default:product.description|default:"" }}
+                    </p>
 
-                <h3>SH-P131 Wall-Mounted Basin</h3>
+                    <span class="price">
 
-                <p class="card-sum">
-                    Wall-mounted basin, without drainer or faucet.
-                </p>
+                        {% if product.price is not None %}
 
-                <span class="price">
-                    <span class="price-empty">Price on request</span>
-                </span>
-            </div>
-        </a>
+                            <span class="currency">€</span>{{ product.price|floatformat:2 }}
 
+                        {% else %}
 
-        <a class="card" href="#">
-            <div class="media">
-                <img src="{% static 'images/sh-8802bl-1.webp' %}" alt="SH-8802BL Pedestal Basin" loading="lazy">
-            </div>
+                            <span class="price-empty">Price on request</span>
 
-            <div class="card-body">
-                <span class="card-cat">Pedestal Basins</span>
+                        {% endif %}
 
-                <h3>SH-8802BL Pedestal Basin</h3>
+                    </span>
 
-                <p class="card-sum">
-                    Pedestal basin, without drainer or faucet.
-                </p>
+                </div>
+            </a>
 
-                <span class="price">
-                    <span class="price-empty">Price on request</span>
-                </span>
-            </div>
-        </a>
+        {% empty %}
 
+            <p>No products available.</p>
 
-        <a class="card" href="#">
-            <div class="media">
-                <img src="{% static 'images/sh-1176-1.webp' %}" alt="SH-1176 LED Mirror" loading="lazy">
-            </div>
-
-            <div class="card-body">
-                <span class="card-cat">Mirrors</span>
-
-                <h3>SH-1176 LED Mirror</h3>
-
-                <p class="card-sum">
-                    Frameless LED mirror, 70 × 70 cm, three light colours.
-                </p>
-
-                <span class="price">
-                    <span class="price-empty">Price on request</span>
-                </span>
-            </div>
-        </a>
+        {% endfor %}
 
     </div>
 </section>
@@ -376,10 +303,16 @@ Toilets, basins, mirrors and fittings. Browse the range and message us for a pri
                 target="_blank"
                 rel="noopener"
             >
-                <svg class="icon" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor"
-                     stroke-width="1.8" stroke-linecap="round"
-                     stroke-linejoin="round" aria-hidden="true">
+                <svg
+                    class="icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                >
                     <path d="M4 5h16v11H9l-5 4z"/>
                 </svg>
 
@@ -393,10 +326,16 @@ Toilets, basins, mirrors and fittings. Browse the range and message us for a pri
     <div class="contact-light">
 
         <a href="tel:07401252502">
-            <svg class="icon" viewBox="0 0 24 24"
-                 fill="none" stroke="currentColor"
-                 stroke-width="1.8" stroke-linecap="round"
-                 stroke-linejoin="round" aria-hidden="true">
+            <svg
+                class="icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
                 <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>
             </svg>
 
@@ -409,10 +348,16 @@ Toilets, basins, mirrors and fittings. Browse the range and message us for a pri
             target="_blank"
             rel="noopener"
         >
-            <svg class="icon" viewBox="0 0 24 24"
-                 fill="none" stroke="currentColor"
-                 stroke-width="1.8" stroke-linecap="round"
-                 stroke-linejoin="round" aria-hidden="true">
+            <svg
+                class="icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
                 <path d="M4 5h16v11H9l-5 4z"/>
             </svg>
 
@@ -421,10 +366,16 @@ Toilets, basins, mirrors and fittings. Browse the range and message us for a pri
 
 
         <a href="mailto:hmbathroom@hotmail.com">
-            <svg class="icon" viewBox="0 0 24 24"
-                 fill="none" stroke="currentColor"
-                 stroke-width="1.8" stroke-linecap="round"
-                 stroke-linejoin="round" aria-hidden="true">
+            <svg
+                class="icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
                 <rect x="3" y="5" width="18" height="14" rx="1"/>
                 <path d="m3 7 9 6 9-6"/>
             </svg>

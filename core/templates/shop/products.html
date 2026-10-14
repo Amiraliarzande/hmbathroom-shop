@@ -11,272 +11,69 @@
     <h1>Products</h1>
     <p>Toilets, basins, mirrors and fittings. Pick a category or scroll the full range.</p>
   </div></section>
+
   <div class="chips-bar"><div class="wrap"><nav class="chips" aria-label="Categories">
-      <a class="chip" href="#all">All <span>23</span></a>
-      <a class="chip" href="#one-piece-toilets">One-Piece Toilets <span>8</span></a>
-      <a class="chip" href="#wall-hung-toilets">Wall-Hung Toilets <span>2</span></a>
-      <a class="chip" href="#smart-toilets">Smart Toilets <span>1</span></a>
-      <a class="chip" href="#concealed-cisterns">Concealed Cisterns <span>1</span></a>
-      <a class="chip" href="#wall-hung-basins">Wall-Hung Basins <span>3</span></a>
-      <a class="chip" href="#pedestal-basins">Pedestal Basins <span>2</span></a>
-      <a class="chip" href="#mirrors">Mirrors <span>5</span></a>
-      <a class="chip" href="#accessories">Accessories <span>1</span></a>
+      <a class="chip" href="#all">All <span>{{ products|length }}</span></a>
+
+      {% for category in categories %}
+        <a class="chip" href="#{{ category.slug }}">
+          {{ category.name }}
+          <span>{{ category.active_products|length }}</span>
+        </a>
+      {% endfor %}
   </nav></div></div>
+
   <div class="wrap list-pad">
-    <section class="cat-section" id="one-piece-toilets">
-      <div class="cat-head"><div><h2>One-Piece Toilets</h2><p>Washdown toilets in S-trap and P-trap, some with a bidet function.</p></div></div>
-      <div class="grid">
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-8604-1.webp' %}" alt="SH-8604 One-Piece Toilet" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">One-Piece Toilets</span>
-            <h3>SH-8604 One-Piece Toilet</h3>
-            <p class="card-sum">S-trap one-piece toilet with bidet function and cold accessories.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-276-1.webp' %}" alt="SH-276 One-Piece Toilet" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">One-Piece Toilets</span>
-            <h3>SH-276 One-Piece Toilet</h3>
-            <p class="card-sum">P-trap one-piece toilet with R&amp;T flush.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-6615-1.webp' %}" alt="SH-6615 One-Piece Toilet" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">One-Piece Toilets</span>
-            <h3>SH-6615 One-Piece Toilet</h3>
-            <p class="card-sum">P-trap one-piece toilet with R&amp;T flush.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-6201-1.webp' %}" alt="SH-6201 One-Piece Toilet" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">One-Piece Toilets</span>
-            <h3>SH-6201 One-Piece Toilet</h3>
-            <p class="card-sum">Tornado flush, S-trap, with bidet function and cold accessories.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-285bl-1.webp' %}" alt="SH-285BL One-Piece Toilet" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">One-Piece Toilets</span>
-            <h3>SH-285BL One-Piece Toilet</h3>
-            <p class="card-sum">One-piece toilet in S-trap with bidet, or P-trap.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-295bl-1.webp' %}" alt="SH-295BL One-Piece Toilet" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">One-Piece Toilets</span>
-            <h3>SH-295BL One-Piece Toilet</h3>
-            <p class="card-sum">One-piece toilet in S-trap with bidet, or P-trap.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-6688m-1.webp' %}" alt="SH-6688M One-Piece Toilet" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">One-Piece Toilets</span>
-            <h3>SH-6688M One-Piece Toilet</h3>
-            <p class="card-sum">S-trap one-piece toilet with bidet function and cold accessories.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-6688bm-1.webp' %}" alt="SH-6688BM One-Piece Toilet" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">One-Piece Toilets</span>
-            <h3>SH-6688BM One-Piece Toilet</h3>
-            <p class="card-sum">P-trap one-piece toilet with R&amp;T flush.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-      </div>
-    </section>
 
-    <section class="cat-section" id="wall-hung-toilets">
-      <div class="cat-head"><div><h2>Wall-Hung Toilets</h2><p>Rimless wall-hung pans, with or without a bidet function.</p></div></div>
-      <div class="grid">
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-009-1.webp' %}" alt="SH-009 Wall-Hung Toilet" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">Wall-Hung Toilets</span>
-            <h3>SH-009 Wall-Hung Toilet</h3>
-            <p class="card-sum">Rimless wall-hung toilet, with or without bidet function.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-006-1.webp' %}" alt="SH-006 Wall-Hung Toilet" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">Wall-Hung Toilets</span>
-            <h3>SH-006 Wall-Hung Toilet</h3>
-            <p class="card-sum">Rimless wall-hung toilet, with or without bidet function.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-      </div>
-    </section>
+    {% for category in categories %}
+      <section class="cat-section" id="{{ category.slug }}">
+        <div class="cat-head"><div>
+          <h2>{{ category.name }}</h2>
+          <p>{{ category.description|default:"Explore our products in this category." }}</p>
+        </div></div>
 
-    <section class="cat-section" id="smart-toilets">
-      <div class="cat-head"><div><h2>Smart Toilets</h2><p>Auto-opening toilet with remote control, bidet and drying.</p></div></div>
-      <div class="grid">
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-927d-1.webp' %}" alt="SH-927D Smart Toilet" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">Smart Toilets</span>
-            <h3>SH-927D Smart Toilet</h3>
-            <p class="card-sum">Auto open and close, remote controller, bidet and drying.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-      </div>
-    </section>
+        <div class="grid">
 
-    <section class="cat-section" id="concealed-cisterns">
-      <div class="cat-head"><div><h2>Concealed Cisterns</h2><p>Concealed cistern and frame with a choice of button finish.</p></div></div>
-      <div class="grid">
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-h01-1.webp' %}" alt="SH-H01 Concealed Cistern and Frame" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">Concealed Cisterns</span>
-            <h3>SH-H01 Concealed Cistern and Frame</h3>
-            <p class="card-sum">Concealed cistern and frame with a round button.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-      </div>
-    </section>
+          {% for product in category.active_products %}
+            <a class="card" href="{% url 'shop:product_detail' slug=product.slug %}">
+              <div class="media">
+                {% with image=product.images.all|first %}
+                  {% if image %}
+                    <img
+                      src="{{ image.image.url }}"
+                      alt="{{ image.alt_text|default:product.name }}"
+                      loading="lazy"
+                    >
+                  {% endif %}
+                {% endwith %}
+              </div>
 
-    <section class="cat-section" id="wall-hung-basins">
-      <div class="cat-head"><div><h2>Wall-Hung Basins</h2><p>Wall-hung and wall-mounted basins, supplied without drainer or faucet.</p></div></div>
-      <div class="grid">
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-p131-1.webp' %}" alt="SH-P131 Wall-Mounted Basin" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">Wall-Hung Basins</span>
-            <h3>SH-P131 Wall-Mounted Basin</h3>
-            <p class="card-sum">Wall-mounted basin, without drainer or faucet.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-p175-1.webp' %}" alt="SH-P175 Wall-Hung Basin" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">Wall-Hung Basins</span>
-            <h3>SH-P175 Wall-Hung Basin</h3>
-            <p class="card-sum">Wall-hung basin, without drainer or faucet.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-p111-1.webp' %}" alt="SH-P111 Wall-Hung Basin" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">Wall-Hung Basins</span>
-            <h3>SH-P111 Wall-Hung Basin</h3>
-            <p class="card-sum">Wall-hung basin, without drainer or faucet.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-      </div>
-    </section>
+              <div class="card-body">
+                <span class="card-cat">{{ category.name }}</span>
 
-    <section class="cat-section" id="pedestal-basins">
-      <div class="cat-head"><div><h2>Pedestal Basins</h2><p>Pedestal basins, supplied without drainer or faucet.</p></div></div>
-      <div class="grid">
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-8802bl-1.webp' %}" alt="SH-8802BL Pedestal Basin" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">Pedestal Basins</span>
-            <h3>SH-8802BL Pedestal Basin</h3>
-            <p class="card-sum">Pedestal basin, without drainer or faucet.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-b199bl-1.webp' %}" alt="SH-B199BL Pedestal Basin" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">Pedestal Basins</span>
-            <h3>SH-B199BL Pedestal Basin</h3>
-            <p class="card-sum">Basin and pedestal set, without drainer or faucet.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-      </div>
-    </section>
+                <h3>{{ product.name }}</h3>
 
-    <section class="cat-section" id="mirrors">
-      <div class="cat-head"><div><h2>Mirrors</h2><p>Framed and frameless LED mirrors in a range of sizes.</p></div></div>
-      <div class="grid">
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-1170-1.webp' %}" alt="SH-1170 Framed Mirror" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">Mirrors</span>
-            <h3>SH-1170 Framed Mirror</h3>
-            <p class="card-sum">Aluminium-framed mirror, 70 × 70 cm.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-1176-1.webp' %}" alt="SH-1176 LED Mirror" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">Mirrors</span>
-            <h3>SH-1176 LED Mirror</h3>
-            <p class="card-sum">Frameless LED mirror, 70 × 70 cm, three light colours.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-1162-1.webp' %}" alt="SH-1162 LED Mirror" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">Mirrors</span>
-            <h3>SH-1162 LED Mirror</h3>
-            <p class="card-sum">Frameless LED mirror, 80 × 60 cm, three light colours.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-1136-1.webp' %}" alt="SH-1136 LED Mirror" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">Mirrors</span>
-            <h3>SH-1136 LED Mirror</h3>
-            <p class="card-sum">Frameless LED mirror, 70 × 70 cm, three light colours.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/sh-045-1.webp' %}" alt="SH-045 LED Mirror" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">Mirrors</span>
-            <h3>SH-045 LED Mirror</h3>
-            <p class="card-sum">Frameless LED mirror, 70 × 50 cm, three light colours.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-      </div>
-    </section>
+                <p class="card-sum">
+                  {{ product.short_description|default:product.description|default:"" }}
+                </p>
 
-    <section class="cat-section" id="accessories">
-      <div class="cat-head"><div><h2>Accessories</h2><p>Fittings that go with the range.</p></div></div>
-      <div class="grid">
-        <a class="card" href="#">
-          <div class="media"><img src="{% static 'images/drainer-white-ceramic-cover-1.webp' %}" alt="Drainer with White Ceramic Cover" loading="lazy"></div>
-          <div class="card-body">
-            <span class="card-cat">Accessories</span>
-            <h3>Drainer with White Ceramic Cover</h3>
-            <p class="card-sum">Basin drainer with a white ceramic cover.</p>
-            <span class="price"><span class="price-empty">Price on request</span></span>
-          </div>
-        </a>
-      </div>
-    </section>
+                <span class="price">
+                  {% if product.price != None %}
+                    {{ product.price }}
+                  {% else %}
+                    <span class="price-empty">Price on request</span>
+                  {% endif %}
+                </span>
+              </div>
+            </a>
+          {% empty %}
+            <p>No products available in this category.</p>
+          {% endfor %}
+
+        </div>
+      </section>
+    {% endfor %}
+
   </div>
 </main>
 {% endblock %}
