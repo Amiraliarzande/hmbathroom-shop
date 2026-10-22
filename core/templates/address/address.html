@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Your addresses | HM Bathroom{% endblock %}
+{% block meta_description %}Save delivery and billing addresses for a smoother checkout.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/account.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="account-shell">
+    <div class="account-wrap">
+        <div class="account-top">
+            <div>
+                <span class="account-eyebrow">HM Bathroom / My account</span>
+                <h1 class="account-title">Your addresses</h1>
+                <p class="account-subtitle">Save delivery and billing addresses for a smoother checkout.</p>
+            </div>
+            <a class="account-btn secondary" href="{% url 'shop:product_list' %}">
+                Continue shopping 
+                <span class="ui-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></svg>
+                </span>
+            </a>
+        </div>
+
+        <div class="account-layout">
+            <aside class="account-side" aria-label="Account navigation">
+                <a href="{% url 'account:profile' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20v-1.5a7 7 0 0 1 14 0V20z"/></svg>
+                    </span>Personal details
+                </a>
+                <a class="active" href="{% url 'address:address_list' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                    </span>Addresses
+                </a>
+                <a href="{% url 'order:order_list' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10l4 4v14H3V3z"/><path d="M7 3v5h10V3M7 13h10M7 17h7"/></svg>
+                    </span>My orders
+                </a>
+                <a href="{% url 'order:order_history' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+                    </span>Purchase history
+                </a>
+                <a href="{% url 'payment:payment_methods' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
+                    </span>Payment methods
+                </a>
+                <a href="{% url 'cart:cart_detail' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 1.9-1.5L22 8H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+                    </span>Basket
+                </a>
+            </aside>
+
+            <section class="account-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Saved addresses</h2>
+                        <p>Choose where your order should be delivered.</p>
+                    </div>
+                    <button class="account-btn rust" type="button" data-show-address>
+                        <span class="ui-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                        </span>Add address
+                    </button>
+                </div>
+
+                {% if form.non_field_errors %}
+                    <div class="account-note" style="color: #b91c1c; background-color: #fee2e2; margin-bottom: 16px;">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div class="account-list" id="address-list">
+                    {% for address in addresses %}
+                        <article class="account-row">
+                            <div>
+                                <h3>
+                                    {{ address.label }} 
+                                    {% if address.is_default %}
+                                        <span class="status success">Default</span>
+                                    {% endif %}
+                                </h3>
+                                <p>{{ address.full_name }}</p>
+                                <p>
+                                    {{ address.address_line_1 }}{% if address.address_line_2 %}, {{ address.address_line_2 }}{% endif %}, 
+                                    {{ address.city }}, {{ address.postcode }}
+                                </p>
+                                <p>{{ address.country }}{% if address.phone %} · {{ address.phone }}{% endif %}</p>
+                            </div>
+                            <div class="account-row-side">
+                                <a class="account-btn secondary" href="{% url 'address:address_edit' address.pk %}">Edit</a>
+                            </div>
+                        </article>
+                    {% empty %}
+                        <p style="color: #6b7280; padding: 12px 0;">No saved addresses yet. Click "Add address" to create one.</p>
+                    {% endfor %}
+                </div>
+
+                <form id="address-form" method="post" action="{% url 'address:address_list' %}" {% if not show_form %}hidden{% endif %} style="margin-top:24px">
+                    {% csrf_token %}
+                    
+                    {% if form.errors %}
+                        <div class="account-note" style="color: #b91c1c; background-color: #fee2e2; margin-bottom: 16px; padding: 12px; border-radius: 6px;">
+                            <p style="font-weight: bold; margin-bottom: 4px;">Please correct the errors below:</p>
+                            <ul style="margin: 0; padding-left: 20px;">
+                                {% for field, errors in form.errors.items %}
+                                    <li><strong>{{ field }}:</strong> {{ errors|striptags }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <div class="panel-heading">
+                        <div>
+                        <h2>Add an address</h2>
+                        <p>Enter the address details below.</p>
+                        </div>
+                    </div>
+                    <div class="account-grid">
+                        <div class="account-field">
+                            <label for="{{ form.label.id_for_label }}">Address label</label>
+                            {{ form.label }}
+                            {{ form.label.errors }}
+                        </div>
+                        <div class="account-field">
+                            <label for="{{ form.full_name.id_for_label }}">Full name</label>
+                            {{ form.full_name }}
+                            {{ form.full_name.errors }}
+                        </div>
+                        <div class="account-field full">
+                            <label for="{{ form.address_line_1.id_for_label }}">Address line 1</label>
+                            {{ form.address_line_1 }}
+                            {{ form.address_line_1.errors }}
+                        </div>
+                        <div class="account-field full">
+                            <label for="{{ form.address_line_2.id_for_label }}">Address line 2 (optional)</label>
+                            {{ form.address_line_2 }}
+                            {{ form.address_line_2.errors }}
+                        </div>
+                        <div class="account-field">
+                            <label for="{{ form.city.id_for_label }}">Town / city</label>
+                            {{ form.city }}
+                            {{ form.city.errors }}
+                        </div>
+                        <div class="account-field">
+                            <label for="{{ form.postcode.id_for_label }}">Postcode</label>
+                            {{ form.postcode }}
+                            {{ form.postcode.errors }}
+                        </div>
+                        <div class="account-field">
+                            <label for="{{ form.country.id_for_label }}">Country</label>
+                            {{ form.country }}
+                            {{ form.country.errors }}
+                        </div>
+                        <div class="account-field">
+                            <label for="{{ form.phone.id_for_label }}">Contact number</label>
+                            {{ form.phone }}
+                            {{ form.phone.errors }}
+                        </div>
+                        <div class="account-field full" style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                            {{ form.is_default }}
+                            <label for="{{ form.is_default.id_for_label }}" style="margin-bottom: 0; cursor: pointer;">Set as default address</label>
+                        </div>
+                    </div>
+                    <div class="account-actions">
+                        <button class="account-btn" type="submit">Save address</button>
+                        <button class="account-btn secondary" type="button" data-cancel-address>Cancel</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/account.js' %}"></script>
+{% endblock %}

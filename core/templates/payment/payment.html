@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Payment | HM Bathroom{% endblock %}
+{% block meta_description %}Review your checkout payment options and billing preferences.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/account.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="account-shell">
+    <div class="account-wrap">
+        <div class="account-top">
+            <div>
+                <span class="account-eyebrow">HM Bathroom / My account</span>
+                <h1 class="account-title">Payment</h1>
+                <p class="account-subtitle">Review your checkout payment options and billing preferences.</p>
+            </div>
+            <a class="account-btn secondary" href="{% url 'shop:product_list' %}">
+                Continue shopping 
+                <span class="ui-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></svg>
+                </span>
+            </a>
+        </div>
+
+        <div class="account-layout">
+            <aside class="account-side" aria-label="Account navigation">
+                <a href="{% url 'account:profile' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20v-1.5a7 7 0 0 1 14 0V20z"/></svg>
+                    </span>Personal details
+                </a>
+                <a href="{% url 'address:address_list' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                    </span>Addresses
+                </a>
+                <a href="{% url 'order:order_list' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10l4 4v14H3V3z"/><path d="M7 3v5h10V3M7 13h10M7 17h7"/></svg>
+                    </span>My orders
+                </a>
+                <a href="{% url 'order:order_history' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+                    </span>Purchase history
+                </a>
+                <a class="active" href="{% url 'payment:payment_methods' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
+                    </span>Payment methods
+                </a>
+                <a href="{% url 'cart:cart_detail' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 1.9-1.5L22 8H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+                    </span>Basket
+                </a>
+            </aside>
+
+            <section class="account-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Payment methods</h2>
+                        <p>Choose a payment method during checkout.</p>
+                    </div>
+                </div>
+
+                <div class="account-note">No real payment details are collected or stored in this prototype. Never enter real card information here.</div>
+
+                <article class="account-row">
+                    <div>
+                        <h3>Pay securely at checkout</h3>
+                        <p>Card payment · Visa, Mastercard and other supported cards</p>
+                        <span class="status success">Available at checkout</span>
+                    </div>
+                    <div class="account-row-side">
+                        <span class="payment-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
+                        </span>
+                    </div>
+                </article>
+
+                <article class="account-row" style="margin-top:12px">
+                    <div>
+                        <h3>Bank transfer</h3>
+                        <p>Order confirmation will include instructions if this option is available.</p>
+                        <span class="status">Availability varies</span>
+                    </div>
+                    <div class="account-row-side">
+                        <span class="payment-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M4 8h15l-3-3M20 16H5l3 3"/></svg>
+                        </span>
+                    </div>
+                </article>
+
+                <div class="panel-heading" style="margin-top:32px">
+                    <div>
+                        <h2>Billing address</h2>
+                        <p>Use your saved address or update it before checkout.</p>
+                    </div>
+                    <a class="link" href="{% url 'address:address_list' %}">
+                        Manage addresses 
+                        <span class="ui-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </span>
+                    </a>
+                </div>
+
+                <article class="account-row">
+                    <div>
+                        {% if default_address %}
+                            <h3>{{ default_address.title }} · Default billing address</h3>
+                            <p>{{ request.user.get_full_name|default:request.user.email }}</p>
+                            <p>{{ default_address.street }}, {{ default_address.city }}, {{ default_address.postal_code }}, {{ default_address.country }}</p>
+                        {% else %}
+                            <h3>No default address found</h3>
+                            <p>Please add a billing address to proceed.</p>
+                        {% endif %}
+                    </div>
+                    <a class="account-btn secondary" href="{% url 'address:address_list' %}">Edit address</a>
+                </article>
+            </section>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/account.js' %}"></script>
+{% endblock %}

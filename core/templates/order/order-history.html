@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Purchase history | HM Bathroom{% endblock %}
+{% block meta_description %}A record of your past purchases, order totals and payment status.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/account.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="account-shell">
+    <div class="account-wrap">
+        <div class="account-top">
+            <div>
+                <span class="account-eyebrow">HM Bathroom / My account</span>
+                <h1 class="account-title">Purchase history</h1>
+                <p class="account-subtitle">A record of your past purchases, order totals and payment status.</p>
+            </div>
+            <a class="account-btn secondary" href="{% url 'shop:product_list' %}">
+                Continue shopping 
+                <span class="ui-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></svg>
+                </span>
+            </a>
+        </div>
+
+        <div class="account-layout">
+            <aside class="account-side" aria-label="Account navigation">
+                <a href="{% url 'account:profile' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20v-1.5a7 7 0 0 1 14 0V20z"/></svg>
+                    </span>Personal details
+                </a>
+                <a href="{% url 'address:address_list' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                    </span>Addresses
+                </a>
+                <a href="{% url 'order:order_list' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10l4 4v14H3V3z"/><path d="M7 3v5h10V3M7 13h10M7 17h7"/></svg>
+                    </span>My orders
+                </a>
+                <a class="active" href="{% url 'order:order_history' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+                    </span>Purchase history
+                </a>
+                <a href="{% url 'payment:payment_methods' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
+                    </span>Payment methods
+                </a>
+                <a href="{% url 'cart:cart_detail' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 1.9-1.5L22 8H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+                    </span>Basket
+                </a>
+            </aside>
+
+            <section class="account-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>All purchases</h2>
+                        <p>Filter and review completed and previous orders.</p>
+                    </div>
+                    <label class="account-field">
+                        <span class="account-label">Status</span>
+                        <select aria-label="Filter orders" data-filter-orders>
+                            <option value="all">All orders</option>
+                            <option value="Awaiting confirmation">Awaiting confirmation</option>
+                            <option value="Processing">Processing</option>
+                            <option value="Dispatched">Dispatched</option>
+                            <option value="Delivered">Delivered</option>
+                            <option value="Cancelled">Cancelled</option>
+                            <option value="Refunded">Refunded</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="account-table-wrap">
+                    <table class="account-table">
+                        <thead>
+                            <tr>
+                                <th>Order</th>
+                                <th>Date</th>
+                                <th>Items</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                                <tr data-order-status="{{ order.get_status_display }}">
+                                    <td><strong>#{{ order.order_number }}</strong></td>
+                                    <td>{{ order.created_at|date:"d M Y" }}</td>
+                                    <td>{{ order.total_items_count }}</td>
+                                    <td>
+                                        <span class="status {% if order.status == 'DELIVERED' %}success{% elif order.status == 'CANCELLED' %}cancel{% elif order.status == 'DISPATCHED' %}ship{% endif %}">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>£{{ order.total_price }}</td>
+                                    <td><a href="#">Details</a></td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="6" style="text-align: center; color: var(--muted); padding: 16px;">No purchase history found.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/account.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const filterSelect = document.querySelector('[data-filter-orders]');
+    if (!filterSelect) return;
+
+    filterSelect.addEventListener('change', function () {
+        const selectedStatus = this.value.toLowerCase().trim();
+        const rows = document.querySelectorAll('.account-table tbody tr[data-order-status]');
+
+        rows.forEach(row => {
+            const rowStatus = (row.getAttribute('data-order-status') || '').toLowerCase().trim();
+            if (selectedStatus === 'all' || rowStatus === selectedStatus) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

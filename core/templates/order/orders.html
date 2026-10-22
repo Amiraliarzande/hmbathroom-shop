@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My orders | HM Bathroom{% endblock %}
+{% block meta_description %}Track recent orders and see which ones are being processed or delivered.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/account.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="account-shell">
+    <div class="account-wrap">
+        <div class="account-top">
+            <div>
+                <span class="account-eyebrow">HM Bathroom / My account</span>
+                <h1 class="account-title">My orders</h1>
+                <p class="account-subtitle">Track recent orders and see which ones are being processed or delivered.</p>
+            </div>
+            <a class="account-btn secondary" href="{% url 'shop:product_list' %}">
+                Continue shopping 
+                <span class="ui-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></svg>
+                </span>
+            </a>
+        </div>
+
+        <div class="account-layout">
+            <aside class="account-side" aria-label="Account navigation">
+                <a href="{% url 'account:profile' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20v-1.5a7 7 0 0 1 14 0V20z"/></svg>
+                    </span>Personal details
+                </a>
+                <a href="{% url 'address:address_list' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                    </span>Addresses
+                </a>
+                <a class="active" href="{% url 'order:order_list' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10l4 4v14H3V3z"/><path d="M7 3v5h10V3M7 13h10M7 17h7"/></svg>
+                    </span>My orders
+                </a>
+                <a href="{% url 'order:order_history' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+                    </span>Purchase history
+                </a>
+                <a href="#">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
+                    </span>Payment methods
+                </a>
+                <a href="{% url 'cart:cart_detail' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 1.9-1.5L22 8H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+                    </span>Basket
+                </a>
+            </aside>
+
+            <section class="account-panel">
+                <div class="account-kpis">
+                    <div class="account-kpi">
+                        <span>Total orders</span>
+                        <strong>{{ total_orders_count }}</strong>
+                    </div>
+                    <div class="account-kpi">
+                        <span>Awaiting confirmation</span>
+                        <strong>{{ awaiting_count }}</strong>
+                    </div>
+                    <div class="account-kpi">
+                        <span>On the way</span>
+                        <strong>{{ dispatched_count }}</strong>
+                    </div>
+                </div>
+
+                <div class="panel-heading">
+                    <div>
+                        <h2>Recent orders</h2>
+                        <p>Your recent order activity.</p>
+                    </div>
+                    <a class="link" href="{% url 'order:order_history' %}">
+                        View purchase history 
+                        <span class="ui-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </span>
+                    </a>
+                </div>
+
+                <div class="account-list">
+                    {% for order in orders %}
+                        <article class="account-row">
+                            <div>
+                                <h3>Order #{{ order.order_number }}</h3>
+                                <p>Placed {{ order.created_at|date:"d F Y" }} · {{ order.total_items_count }} item{{ order.total_items_count|pluralize }}</p>
+                                <span class="status {% if order.status == 'DELIVERED' %}success{% elif order.status == 'DISPATCHED' %}ship{% endif %}">
+                                    {{ order.get_status_display }}
+                                </span>
+                            </div>
+                            <div class="account-row-side">
+                                <div class="account-price">£{{ order.total_price }}</div>
+                                <a class="link" href="#">View details</a>
+                            </div>
+                        </article>
+                    {% empty %}
+                        <p style="color: var(--muted); padding: 12px 0;">No orders placed yet.</p>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/account.js' %}"></script>
+{% endblock %}

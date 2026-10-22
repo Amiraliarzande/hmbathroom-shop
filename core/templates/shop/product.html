@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block title %}{{ product.name }} | HM Bathroom{% endblock %}
-
 {% block meta_description %}{{ product.short_description|default:product.name }}{% endblock %}
 
 {% block content %}
@@ -18,7 +17,7 @@
     </nav>
 
     <div class="pdp">
-      <!-- GALLERY -->
+      <!-- GALLERY: main slider + thumbnail strip -->
       <div class="pdp-media">
         <div class="gallery">
           <div class="gallery-main">
@@ -67,11 +66,7 @@
             <span class="g-count">
               <span class="g-cur">1</span> /
               {% with images=product.images.all %}
-                {% if images %}
-                  {{ images|length }}
-                {% else %}
-                  1
-                {% endif %}
+                {% if images %}{{ images|length }}{% else %}1{% endif %}
               {% endwith %}
             </span>
           </div>
@@ -126,44 +121,48 @@
           {{ product.short_description|default:product.description|default:"" }}
         </p>
 
-        <!-- PRODUCT PRICE -->
-        <p class="price">
-          {% if product.price is not None %}
-            <span class="currency">€</span>{{ product.price|floatformat:2 }}
-          {% else %}
-            <span class="price-empty">Price on request</span>
-          {% endif %}
-        </p>
-
         <!-- OPTIONS + PRICE -->
         <h2 class="block-title">Options</h2>
-
         <ul class="opt-list">
           {% for option in product.options.all %}
             <li class="opt">
               <span class="opt-name">{{ option.key }}</span>
-
               <span class="price">
                 {% if option.value %}
-                  <span class="currency">€</span>{{ option.value }}
+                  <span class="currency">£</span>{{ option.value }}
                 {% else %}
                   <span class="price-empty">Price on request</span>
                 {% endif %}
               </span>
             </li>
           {% empty %}
-            <li class="opt">
-              <span class="opt-name">
-                Please contact us for available options.
-              </span>
-              <span class="price">
-                <span class="price-empty">Price on request</span>
-              </span>
-            </li>
+            {% if product.price is not None %}
+              <li class="opt">
+                <span class="opt-name">Standard</span>
+                <span class="price"><span class="currency">£</span>{{ product.price|floatformat:2 }}</span>
+              </li>
+            {% else %}
+              <li class="opt">
+                <span class="opt-name">Please contact us for available options.</span>
+                <span class="price"><span class="price-empty">Price on request</span></span>
+              </li>
+            {% endif %}
           {% endfor %}
         </ul>
 
-        <div class="buy">
+        <!-- BUY / BASKET ACTIONS -->
+        <div class="buy" style="flex-wrap: wrap; gap: 12px;">
+          {% if product.price is not None %}
+            <form method="post" action="{% url 'cart:add_to_cart' product.id %}" style="display: flex; gap: 10px; width: 100%;">
+              {% csrf_token %}
+              <input type="hidden" name="quantity" value="1">
+              <button class="btn btn-rust" type="submit" style="flex: 1; justify-content: center;">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 1.9-1.5L22 8H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+                <span>Add to basket</span>
+              </button>
+            </form>
+          {% endif %}
+
           <a
             class="btn btn-navy"
             href="https://wa.me/447719191818?text={{ 'Hi HM Bathroom, I would like a price for '|urlencode }}{{ product.name|urlencode }}."
@@ -186,41 +185,29 @@
 
         <p class="buy-note">
           Or email
-          <a href="mailto:hmbathroom@hotmail.com?subject=Product%20Enquiry">
+          <a href="mailto:hmbathroom@hotmail.com?subject=Enquiry%3A%20{{ product.name|urlencode }}">
             hmbathroom@hotmail.com
           </a>
         </p>
 
         <h2 class="block-title">Specifications</h2>
-
         <dl class="specs">
           {% with specification=product.specification %}
-            {% if specification.size %}
-              <div>
-                <dt>Size</dt>
-                <dd>{{ specification.size }}</dd>
-              </div>
-            {% endif %}
-
-            {% if specification.pan %}
-              <div>
-                <dt>Pan</dt>
-                <dd>{{ specification.pan }}</dd>
-              </div>
-            {% endif %}
-
-            {% if specification.flush %}
-              <div>
-                <dt>Flush</dt>
-                <dd>{{ specification.flush }}</dd>
-              </div>
-            {% endif %}
-
-            {% if specification.seat %}
-              <div>
-                <dt>Seat</dt>
-                <dd>{{ specification.seat }}</dd>
-              </div>
+            {% if specification %}
+              {% if specification.size %}
+                <div><dt>Size</dt><dd>{{ specification.size }}</dd></div>
+              {% endif %}
+              {% if specification.pan %}
+                <div><dt>Pan</dt><dd>{{ specification.pan }}</dd></div>
+              {% endif %}
+              {% if specification.flush %}
+                <div><dt>Flush</dt><dd>{{ specification.flush }}</dd></div>
+              {% endif %}
+              {% if specification.seat %}
+                <div><dt>Seat</dt><dd>{{ specification.seat }}</dd></div>
+              {% endif %}
+            {% else %}
+              <p style="color: var(--muted);">No specifications available for this product.</p>
             {% endif %}
           {% endwith %}
         </dl>
@@ -232,12 +219,11 @@
   <section class="wrap section">
     <div class="section-head">
       <h2>More in this range</h2>
-
       <a
         class="link"
         href="{% url 'shop:product_list' %}#{{ product.category.slug }}"
       >
-        See all {{ product.category.name }}
+        See all {{ product.category.name|lower }}
       </a>
     </div>
 
@@ -266,19 +252,14 @@
           </div>
 
           <div class="card-body">
-            <span class="card-cat">
-              {{ related_product.category.name }}
-            </span>
-
+            <span class="card-cat">{{ related_product.category.name }}</span>
             <h3>{{ related_product.name }}</h3>
-
             <p class="card-sum">
               {{ related_product.short_description|default:related_product.description|default:"" }}
             </p>
-
             <span class="price">
               {% if related_product.price is not None %}
-                <span class="currency">€</span>{{ related_product.price|floatformat:2 }}
+                <span class="currency">£</span>{{ related_product.price|floatformat:2 }}
               {% else %}
                 <span class="price-empty">Price on request</span>
               {% endif %}

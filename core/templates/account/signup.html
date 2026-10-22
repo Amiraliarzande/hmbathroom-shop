@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create an account | HM Bathroom{% endblock %}
+{% block meta_description %}Create an HM Bathroom account to manage your orders and addresses.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/account.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="auth-shell">
+    <section class="auth-card" aria-labelledby="auth-title">
+        <a class="logo" href="{% url 'home' %}">
+            <span class="logo-main">HM BATHROOM</span>
+            <span class="logo-tag">TOILETS • BASINS • MIRRORS</span>
+        </a>
+        <span class="account-eyebrow">Get started</span>
+        <h1 id="auth-title">Create an account</h1>
+        <p id="auth-description">Access your orders, saved addresses and account details.</p>
+        
+        <div class="account-note">Static preview only. Authentication is not connected to a server.</div>
+        
+        <form method="post" aria-describedby="auth-description">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="account-note" style="color: #b91c1c; background-color: #fee2e2;">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="account-field">
+                <label for="{{ form.email.id_for_label }}">Email address</label>
+                {{ form.email }}
+                {{ form.email.errors }}
+            </div>
+            
+            <div class="account-field">
+                <label for="{{ form.first_name.id_for_label }}">First name</label>
+                {{ form.first_name }}
+                {{ form.first_name.errors }}
+            </div>
+
+            <div class="account-field">
+                <label for="{{ form.last_name.id_for_label }}">Last name</label>
+                {{ form.last_name }}
+                {{ form.last_name.errors }}
+            </div>
+
+            <div class="account-field">
+                <label for="{{ form.password.id_for_label }}">Password</label>
+                {{ form.password }}
+                {{ form.password.errors }}
+            </div>
+
+            <div class="account-field">
+                <label for="{{ form.confirm_password.id_for_label }}">Confirm password</label>
+                {{ form.confirm_password }}
+                {{ form.confirm_password.errors }}
+            </div>
+
+            <div class="account-actions">
+                <button class="account-btn btn-full-width" type="submit" id="auth-submit">Create account</button>
+            </div>
+        </form>
+        
+        <p class="auth-switch">
+            <span>Already have an account?</span> 
+            <a href="{% url 'account:login' %}">Sign in</a>
+        </p>
+        <p class="auth-switch">
+            <a href="{% url 'home' %}">&larr; Back to home</a>
+        </p>
+    </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/account.js' %}"></script>
+{% endblock %}

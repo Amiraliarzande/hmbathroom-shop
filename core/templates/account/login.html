@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sign in | HM Bathroom{% endblock %}
+{% block meta_description %}Sign in or create your HM Bathroom account.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/account.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="auth-shell">
+    <section class="auth-card" aria-labelledby="auth-title">
+        <a class="logo" href="{% url 'home' %}">
+            <span class="logo-main">HM BATHROOM</span>
+            <span class="logo-tag">TOILETS • BASINS • MIRRORS</span>
+        </a>
+        <span class="account-eyebrow">Welcome back</span>
+        <h1 id="auth-title">Sign in to your account</h1>
+        <p id="auth-description">Access your orders, saved addresses and account details.</p>
+        
+        <div class="account-note">Sign in to your account below.</div>
+        
+        <form method="post" aria-describedby="auth-description">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="account-note" style="color: #b91c1c; background-color: #fee2e2;">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="account-field">
+                <label for="{{ form.username.id_for_label }}">Email address</label>
+                {{ form.username }}
+                {{ form.username.errors }}
+            </div>
+            
+            <div class="account-field">
+                <label for="{{ form.password.id_for_label }}">Password</label>
+                {{ form.password }}
+                {{ form.password.errors }}
+            </div>
+
+            <div class="account-actions">
+                <button class="account-btn btn-full-width" type="submit" id="auth-submit">Sign in</button>
+            </div>
+        </form>
+        
+        <p class="auth-switch">
+            <span>New to HM Bathroom?</span> 
+            <a href="{% url 'account:signup' %}">Create an account</a>
+        </p>
+        <p class="auth-switch">
+            <a href="{% url 'home' %}">&larr; Back to home</a>
+        </p>
+    </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/account.js' %}"></script>
+{% endblock %}

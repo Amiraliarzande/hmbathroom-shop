@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Your basket | HM Bathroom{% endblock %}
+{% block meta_description %}Review your selected items before continuing to checkout.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/account.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="account-shell">
+    <div class="account-wrap">
+        <div class="account-top">
+            <div>
+                <span class="account-eyebrow">HM Bathroom / My account</span>
+                <h1 class="account-title">Your basket</h1>
+                <p class="account-subtitle">Review your selected items before continuing to checkout.</p>
+            </div>
+            <a class="account-btn secondary" href="{% url 'shop:product_list' %}">
+                Continue shopping 
+                <span class="ui-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></svg>
+                </span>
+            </a>
+        </div>
+
+        <div class="account-layout">
+            <aside class="account-side" aria-label="Account navigation">
+                <a href="{% url 'account:profile' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20v-1.5a7 7 0 0 1 14 0V20z"/></svg>
+                    </span>Personal details
+                </a>
+                <a href="{% url 'address:address_list' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                    </span>Addresses
+                </a>
+                <a href="{% url 'order:order_list' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10l4 4v14H3V3z"/><path d="M7 3v5h10V3M7 13h10M7 17h7"/></svg>
+                    </span>My orders
+                </a>
+                <a href="{% url 'order:order_history' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+                    </span>Purchase history
+                </a>
+                <a href="{% url 'payment:payment_methods' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
+                    </span>Payment methods
+                </a>
+                <a class="active" href="{% url 'cart:cart_detail' %}">
+                    <span class="side-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 1.9-1.5L22 8H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+                    </span>Basket
+                </a>
+            </aside>
+
+            <section class="account-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Basket items</h2>
+                        <p>Review and update your items below.</p>
+                    </div>
+                    <a class="link" href="{% url 'shop:product_list' %}">
+                        <span class="ui-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                        </span> Add more products
+                    </a>
+                </div>
+
+                <div class="cart-layout" style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(250px,.8fr);gap:28px;align-items:start">
+                    
+                    <div id="cart-items">
+                        {% for item in cart.items.all %}
+                            <article class="cart-item" data-price="{{ item.product.price }}">
+                                <div class="cart-thumb" aria-hidden="true">
+                                    <svg viewBox="0 0 48 48"><path d="M14 7h20l3 8v25H11V15z"/><path d="M14 15h20M18 7v8m12-8v8M18 24h12M18 30h8"/></svg>
+                                </div>
+                                <div>
+                                    <h3>{{ item.product.name }}</h3>
+                                    <p>{% if item.product.model_number %}Model {{ item.product.model_number }}{% endif %}</p>
+                                    
+                                    <form method="post" action="{% url 'cart:update_cart' item.id %}" style="display: inline-block; margin-top: 8px;">
+                                        {% csrf_token %}
+                                        <div class="qty">
+                                            <input type="number" name="quantity" min="1" max="99" value="{{ item.quantity }}" aria-label="Quantity" data-quantity onchange="this.form.submit()">
+                                        </div>
+                                    </form>
+
+                                    <a class="remove" href="{% url 'cart:remove_from_cart' item.id %}">Remove</a>
+                                </div>
+                                <strong class="account-price item-total">£{{ item.get_total_price }}</strong>
+                            </article>
+                        {% empty %}
+                            <div class="empty-state" style="padding: 30px; text-align: center;">
+                                <h3>Your basket is empty</h3>
+                                <p style="color: var(--muted); margin: 8px 0 16px;">Explore the range and add something to your basket.</p>
+                                <a class="account-btn" href="{% url 'shop:product_list' %}">Browse products</a>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <aside class="cart-summary">
+                        <h2>Order summary</h2>
+                        <div class="summary-line">
+                            <span>Subtotal</span>
+                            <strong id="cart-subtotal">£{{ cart.get_total_price }}</strong>
+                        </div>
+                        <div class="summary-line">
+                            <span>Delivery</span>
+                            <strong id="cart-delivery">Calculated next</strong>
+                        </div>
+                        <div class="summary-line total">
+                            <span>Total</span>
+                            <strong id="cart-total">£{{ cart.get_total_price }}</strong>
+                        </div>
+                        
+                        {% if cart.items.all %}
+                            <form method="post" action="{% url 'order:create_order' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="account-btn rust" style="width:100%;margin-top:18px; text-align: center; box-sizing: border-box; border: none; cursor: pointer;">
+                                    Continue to checkout 
+                                    <span class="ui-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                                    </span>
+                                </button>
+                            </form>
+                        {% endif %}
+                        
+                        <p style="font-size:11px;color:var(--muted);margin-top:12px">Checkout is a static demonstration. No order will be placed.</p>
+                    </aside>
+
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/account.js' %}"></script>
+{% endblock %}
